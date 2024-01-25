@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+spec:
+  selector: 
+    app: bitcoin-app
+  ports:
+    - protocol: 'TCP'
+      port: 3030      #outside port
+      targetPort: 8080
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitcoin-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bitcoin-app
+  template:
+    metadata:
+      labels:
+        app: bitcoin-app
+    spec:
+      containers:
+        - name: service-a-con
+          image: gilbenhamo/service-a:latest
